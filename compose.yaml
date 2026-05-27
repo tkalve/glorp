@@ -1,0 +1,18 @@
+services:
+  api:
+    build:
+      context: ./api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    expose:
+      - "8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      API_UPSTREAM: api:8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api

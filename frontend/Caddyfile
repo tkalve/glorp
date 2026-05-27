@@ -1,0 +1,19 @@
+{
+	admin off
+	persist_config off
+	auto_https off
+}
+
+:8080 {
+	encode zstd gzip
+
+	handle /glorp* {
+		reverse_proxy {$API_UPSTREAM:api:8080}
+	}
+
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}
