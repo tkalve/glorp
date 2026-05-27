@@ -6,10 +6,7 @@ using Glorp.Api.Glorpiatr;
 
 if (args.Length >= 1 && args[0] == "generate-client")
 {
-    var outputDir = Path.GetFullPath(
-        args.Length >= 2 ? args[1] : Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..", "frontend", "src", "glorp"));
-
-    ClientGenerator.Generate(outputDir);
+    ClientGenerator.Generate();
 
     return;
 }
@@ -25,6 +22,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.AddGlorp();
+builder.Services.RegisterGlorpHandlers();
 
 var app = builder.Build();
 

@@ -29,7 +29,7 @@ function FoosPanel() {
     setLoading(true)
     setError(null)
     try {
-      const response = await client.send({ $type: 'FoosRequest', name })
+      const response = await client.send({ $type: 'GetFoosRequest', name })
       setFoos(response.data ?? [])
     } catch (err) {
       setError(formatError(err))
@@ -41,7 +41,7 @@ function FoosPanel() {
 
   return (
     <section className="panel">
-      <h2>Foos</h2>
+      <h2>Get Foos</h2>
       <form onSubmit={search}>
         <label>
           Name contains
@@ -79,7 +79,7 @@ function BarsPanel() {
     setLoading(true)
     setError(null)
     try {
-      const response = await client.send({ $type: 'BarsRequest', minHeight })
+      const response = await client.send({ $type: 'GetBarsRequest', minHeight })
       setBars(response.data ?? [])
     } catch (err) {
       setError(formatError(err))
@@ -91,7 +91,7 @@ function BarsPanel() {
 
   return (
     <section className="panel">
-      <h2>Bars</h2>
+      <h2>Get Bars</h2>
       <form onSubmit={search}>
         <label>
           Min height

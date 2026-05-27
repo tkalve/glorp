@@ -12,10 +12,17 @@ public static class ConfigurationExtensions
     public static IServiceCollection AddGlorp(this IServiceCollection services)
     {
         services.AddSingleton<IGlorpiator, Glorpiator>();
+        // services.AddGlorpHandlers();
 
+        return services;
+    }
+
+    public static IServiceCollection RegisterGlorpHandlers(this IServiceCollection services)
+    {
         var handlerInterface = typeof(IRequestHandler<,>);
+        var assembly = Assembly.GetCallingAssembly();
 
-        var handlers = Assembly.GetExecutingAssembly().GetTypes()
+        var handlers = assembly.GetTypes()
             .Where(t => !t.IsAbstract && !t.IsInterface)
             .SelectMany(t => t.GetInterfaces()
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerInterface)

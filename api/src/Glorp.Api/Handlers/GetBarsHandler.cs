@@ -3,10 +3,26 @@ using Glorp.Api.Glorpiatr;
 
 namespace Glorp.Api.Handlers;
 
-public class GetBarsHandler : IRequestHandler<BarsRequest, BarsResponse>
+public class GetBarsHandler : IRequestHandler<GetBarsHandler.GetBarsRequest, GetBarsHandler.GetBarsResponse>
 {
-    public async Task<BarsResponse> HandleAsync(
-        BarsRequest request, 
+    /// <summary>
+    /// A Glorp Bars request object, returns any Bar with a height greater than or equal to the provided MinHeight
+    /// </summary>
+    /// <param name="MinHeight"></param>
+    public record GetBarsRequest(int MinHeight) : IGlorpRequest<GetBarsResponse>;
+
+    /// <summary>
+    /// A Glorp Bars response object
+    /// </summary>
+    public class GetBarsResponse : IGlorpResponse<IEnumerable<Bar>>
+    {
+        public IEnumerable<Bar>? Data { get; set; }
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+    }
+
+    public async Task<GetBarsResponse> HandleAsync(
+        GetBarsRequest request,
         CancellationToken cancellationToken)
     {
         var bars = new List<Bar>() {
@@ -17,7 +33,7 @@ public class GetBarsHandler : IRequestHandler<BarsRequest, BarsResponse>
             new("BarFive", 65, 160.0)
         };
 
-        return new BarsResponse {
+        return new GetBarsResponse {
             Data = bars.Where(b => b.Height >= request.MinHeight),
             Success = true
         };

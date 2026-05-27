@@ -3,10 +3,26 @@ using Glorp.Api.Entities;
 
 namespace Glorp.Api.Handlers;
 
-public class GetFoosHandler : IRequestHandler<FoosRequest, FoosResponse>
+public class GetFoosHandler : IRequestHandler<GetFoosHandler.GetFoosRequest, GetFoosHandler.GetFoosResponse>
 {
-    public async Task<FoosResponse> HandleAsync(
-        FoosRequest request, 
+    /// <summary>
+    /// A Glorp Foos request object, returns any Foo with a name that contains the provided Name string (case-insensitive)
+    /// </summary>
+    /// <param name="Name"></param>
+    public record GetFoosRequest(string Name) : IGlorpRequest<GetFoosResponse>;
+
+    /// <summary>
+    /// A Glorp Foos response object
+    /// </summary>
+    public class GetFoosResponse : IGlorpResponse<IEnumerable<Foo>>
+    {
+        public IEnumerable<Foo>? Data { get; set; }
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+    }
+
+    public async Task<GetFoosResponse> HandleAsync(
+        GetFoosRequest request,
         CancellationToken cancellationToken)
     {
         var foos = new List<Foo>() {
@@ -160,7 +176,7 @@ public class GetFoosHandler : IRequestHandler<FoosRequest, FoosResponse>
             new("YellowGreen", "#9ACD32")
         };
 
-        return new FoosResponse {
+        return new GetFoosResponse {
             Data = foos.Where(f => f.Name.Contains(request.Name, StringComparison.OrdinalIgnoreCase)),
             Success = true
         };
